@@ -17,7 +17,11 @@ jobs:
           - { os: ubuntu-latest, c-compiler: clang, cpp-compiler: clang++ }
 
     runs-on: ${{ matrix.platform.os }}
-
+    env:
+      SPELLCHECKER_PREFER_HUNSPELL: ${{ matrix.platform.hunspell }}
+      CC: ${{ matrix.platform.c-compiler }}
+      CXX: ${{ matrix.platform.cpp-compiler }}
+        
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -28,10 +32,6 @@ jobs:
       run: |
         npm install
         npm test
-      env:
-        SPELLCHECKER_PREFER_HUNSPELL: ${{ matrix.platform.hunspell }}
-        CC: ${{ matrix.platform.c-compiler }}
-        CXX: ${{ matrix.platform.cpp-compiler }}
 
   build-gyp:
     strategy:
@@ -46,7 +46,10 @@ jobs:
           - { os: ubuntu-latest, c-compiler: clang, cpp-compiler: clang++ }
 
     runs-on: ${{ matrix.platform.os }}
-
+    env:
+      CC: ${{ matrix.platform.c-compiler }}
+      CXX: ${{ matrix.platform.cpp-compiler }}
+    
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -64,6 +67,3 @@ jobs:
       run: |
         node-gyp configure
         node-gyp build
-      env:
-        CC: ${{ matrix.platform.c-compiler }}
-        CXX: ${{ matrix.platform.cpp-compiler }}
