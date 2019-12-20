@@ -13,7 +13,6 @@ jobs:
           - { os: windows-latest }
           - { os: macos-latest, force-hunspell: true }  
           - { os: macos-latest }  
-          - { os: ubuntu-latest }
           - { os: ubuntu-latest, use-clang: true }
 
     runs-on: ${{ matrix.platform.os }}
@@ -26,14 +25,15 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Clang env
+    - name: npm install, build, and test (clang)
       if: matrix.platform.use-clang == true
       run: |
         export CC="$(which clang)"
         export CPP="$(which clang++)"
+        npm install
+        npm test
     - name: npm install, build, and test
       run: |
-        echo "Using $CC"
         npm install
         npm test
 
@@ -46,7 +46,6 @@ jobs:
         platform: 
           - { os: windows-latest }
           - { os: macos-latest }  
-          - { os: ubuntu-latest }
           - { os: ubuntu-latest, use-clang: true }
 
     runs-on: ${{ matrix.platform.os }}
@@ -61,15 +60,16 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Clang env
+    - name: node-gyp install
+      run: |
+        npm install -g node-gyp
+    - name: node-gyp configure & build (clang)
       if: matrix.platform.use-clang == true
       run: |
         export CC="$(which clang)"
         export CPP="$(which clang++)"
-    - name: node-gyp install
-      run: |
-        echo "Using $CC"
-        npm install -g node-gyp
+        node-gyp configure
+        node-gyp build
     - name: node-gyp configure & build
       run: |
         node-gyp configure
