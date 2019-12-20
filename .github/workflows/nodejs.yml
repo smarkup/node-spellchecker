@@ -9,18 +9,16 @@ jobs:
       matrix:
         node-version: [8.x, 10.x, 12.x]
         platform: 
-          - { os: windows-latest, hunspell: true }
+          - { os: windows-latest, force-hunspell: true }
           - { os: windows-latest }
-          - { os: macos-latest, hunspell: true }  
+          - { os: macos-latest, force-hunspell: true }  
           - { os: macos-latest }  
           - { os: ubuntu-latest }
-          - { os: ubuntu-latest, c-compiler: clang, cpp-compiler: clang++ }
+          - { os: ubuntu-latest, use-clang: true }
 
     runs-on: ${{ matrix.platform.os }}
     env:
       SPELLCHECKER_PREFER_HUNSPELL: ${{ matrix.platform.hunspell }}
-      CC: ${{ matrix.platform.c-compiler }}
-      CXX: ${{ matrix.platform.cpp-compiler }}
         
     steps:
     - uses: actions/checkout@v1
@@ -28,8 +26,14 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Clang env
+      if: matrix.platform.use-clang == true
+      run: |
+        export CC="$(which clang)"
+        export CPP="$(which clang++)"
     - name: npm install, build, and test
       run: |
+        echo "Using $CC"
         npm install
         npm test
 
@@ -43,12 +47,9 @@ jobs:
           - { os: windows-latest }
           - { os: macos-latest }  
           - { os: ubuntu-latest }
-          - { os: ubuntu-latest, c-compiler: clang, cpp-compiler: clang++ }
+          - { os: ubuntu-latest, use-clang: true }
 
     runs-on: ${{ matrix.platform.os }}
-    env:
-      CC: ${{ matrix.platform.c-compiler }}
-      CXX: ${{ matrix.platform.cpp-compiler }}
     
     steps:
     - uses: actions/checkout@v1
@@ -60,8 +61,14 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Clang env
+      if: matrix.platform.use-clang == true
+      run: |
+        export CC="$(which clang)"
+        export CPP="$(which clang++)"
     - name: node-gyp install
       run: |
+        echo "Using $CC"
         npm install -g node-gyp
     - name: node-gyp configure & build
       run: |
