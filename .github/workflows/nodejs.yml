@@ -35,7 +35,7 @@ jobs:
     - name: node-gyp install
       run: |
         npm install -g node-gyp
-    - name: node-gyp configure
+    - name: node-gyp configure & build
       run: |
         node-gyp configure
         node-gyp build
