@@ -8,13 +8,42 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [8.x, 10.x, 12.x]
-        python-version: [3.6, 3.7, 3.8]  # 2.7, 3.5,
         platform: 
           - { os: windows-latest, hunspell: true }
           - { os: windows-latest }
           - { os: macos-latest, hunspell: true }  
           - { os: macos-latest }  
           - { os: ubuntu-latest }
+          - { os: ubuntu-latest, c-compiler: clang, cpp-compiler: clang++ }
+
+    runs-on: ${{ matrix.platform.os }}
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build, and test
+      run: |
+        npm install
+        npm test
+      env:
+        SPELLCHECKER_PREFER_HUNSPELL: ${{ matrix.platform.hunspell }}
+        CC: ${{ matrix.platform.c-compiler }}
+        CXX: ${{ matrix.platform.cpp-compiler }}
+
+  build-gyp:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+        python-version: [3.6, 3.7, 3.8]  # 2.7, 3.5,
+        platform: 
+          - { os: windows-latest }
+          - { os: macos-latest }  
+          - { os: ubuntu-latest }
+          - { os: ubuntu-latest, c-compiler: clang, cpp-compiler: clang++ }
 
     runs-on: ${{ matrix.platform.os }}
 
@@ -28,10 +57,6 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm test
     - name: node-gyp install
       run: |
         npm install -g node-gyp
@@ -40,4 +65,5 @@ jobs:
         node-gyp configure
         node-gyp build
       env:
-        SPELLCHECKER_PREFER_HUNSPELL: ${{ matrix.platform.hunspell }}
+        CC: ${{ matrix.platform.c-compiler }}
+        CXX: ${{ matrix.platform.cpp-compiler }}
