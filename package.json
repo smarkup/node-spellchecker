@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "jasmine-focused --captureExceptions --coffee spec/",
-    "install": "node-gyp-build --target electron@11.1.1"
+    "install": "yarn node-gyp-build --target electron@11.1.1"
   },
   "devDependencies": {
     "jasmine-focused": "^1.0.7",
