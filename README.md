@@ -2,6 +2,15 @@
 
 Native bindings to [NSSpellChecker](https://developer.apple.com/library/mac/#documentation/cocoa/reference/ApplicationKit/Classes/NSSpellChecker_Class/Reference/Reference.html), [Hunspell](http://hunspell.sourceforge.net/), or the [Windows 8 Spell Check API](https://msdn.microsoft.com/en-us/library/windows/desktop/hh869853(v=vs.85).aspx), depending on your platform. Windows 7 and below as well as Linux will rely on Hunspell.
 
+## Rebuilding
+
+Change electron version as needed:
+
+```bash
+yarn prebuildify --target electron@11.1.1 --strip
+# now commit artefacts in `prebuilds` dir
+```
+
 ## Installing
 
 ```bash
