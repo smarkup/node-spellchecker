@@ -7,7 +7,7 @@ Native bindings to [NSSpellChecker](https://developer.apple.com/library/mac/#doc
 Change electron version as needed:
 
 ```bash
-yarn prebuildify --target electron@11.1.1 --strip
+yarn prebuildify --target electron@12.0.7 --strip
 # now commit artefacts in `prebuilds` dir
 ```
 
