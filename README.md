@@ -11,6 +11,13 @@ yarn prebuildify --target electron@12.0.7 --strip
 # now commit artefacts in `prebuilds` dir
 ```
 
+## Issues:
+
+1. Different checksum cross platform:
+Remove executable bit from binary files
+`git update-index --chmod=-x path/to/file`
+
+
 ## Installing
 
 ```bash
